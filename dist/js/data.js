@@ -74,6 +74,7 @@ function loadData(type){
             var jsont = csvJSON(myCsv);
             var json =  JSON.parse(jsont);
             globalLib.museums=json;
+            map.getMarkersFromData(json, type);
 
           }
         };
@@ -89,6 +90,7 @@ function loadData(type){
             var jsont = csvJSON(myCsv);
             var json =  JSON.parse(jsont);
             globalLib.libraries=json;
+            map.getMarkersFromData(json, type);
           }
         };
 	    break;
@@ -103,6 +105,7 @@ function loadData(type){
             var jsont = csvJSON(myCsv);
             var json =  JSON.parse(jsont);
             globalLib.cultureCenters=json;
+            map.getMarkersFromData(json, type);
 
           }
         };
@@ -118,6 +121,7 @@ function loadData(type){
             var jsont = csvJSON(myCsv);
             var json =  JSON.parse(jsont);
             globalLib.theatres=json;
+            map.getMarkersFromData(json, type);
 
           }
         };
@@ -133,7 +137,7 @@ function loadData(type){
             var jsont = csvJSON(myCsv);
             var json =  JSON.parse(jsont);
             globalLib.cultureHouses=json;
-            console.log(globalLib.cultureHouses);
+            map.getMarkersFromData(json, type);
           }
         };
 	   	break;

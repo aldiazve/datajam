@@ -30,48 +30,47 @@ function initGoogleMap() {
 
 function getMarkersFromData( hotelsData, type ){
 	var composedURL = ""
-	console.log(globalLib);
 	switch(type) {
 	    case globalLib.datasetCases["RESTAURANTS"] :
 				for (var i = 0; i < hotelsData.length; i++) {
 					composedURL = GEOCODE_URL + hotelsData[i].direccion + COUNTRY_ISO + MAPS_KEY
-					getLatLngFromAddressURLRes(composedURL, i, globalLib.restaurants, restaurantMarkers);
+					getLatLngFromAddressURLRes(composedURL, i, globalLib.restaurants, restaurantMarkers, "RESTAURANTS" );
 				}
 	    break;
 			case globalLib.datasetCases["LODGING"] :
 				for (var i = 0; i < hotelsData.length; i++) {
 					composedURL = GEOCODE_URL + hotelsData[i].direccion + COUNTRY_ISO + MAPS_KEY
-					getLatLngFromAddressURLRes(composedURL, i, globalLib.lodging, hotelMarkers);
+					getLatLngFromAddressURLRes(composedURL, i, globalLib.lodging, hotelMarkers, "LODGING");
 				}
 	    break;
 	  	case globalLib.datasetCases["MUSEUMS"] :
 				for (var i = 0; i < hotelsData.length; i++) {
 					composedURL = GEOCODE_URL + hotelsData[i].direccion + COUNTRY_ISO + MAPS_KEY
-					getLatLngFromAddressURLMus(composedURL, i, globalLib.museums, museumMarkers);
+					getLatLngFromAddressURLMus(composedURL, i, globalLib.museums, museumMarkers, "MUSEUMS");
 				}
 	    break;
 	  	case globalLib.datasetCases["LIBRARIES"] :
 				for (var i = 0; i < hotelsData.lengtmuseumMarkersh; i++) {
 					composedURL = GEOCODE_URL + hotelsData[i].direccion + COUNTRY_ISO + MAPS_KEY
-					getLatLngFromAddressURLMus(composedURL, i, globalLib.museums, librariesMarkers);
+					getLatLngFromAddressURLMus(composedURL, i, globalLib.museums, librariesMarkers ,"LIBRARIES");
 				}
 	    break;
 	  	case globalLib.datasetCases["CULTURE_CENTERS"] :
 				for (var i = 0; i < hotelsData.length; i++) {
 					composedURL = GEOCODE_URL + hotelsData[i].direccion + COUNTRY_ISO + MAPS_KEY
-					getLatLngFromAddressURLMus(composedURL, i, globalLib.museums, centerMarkers);
+					getLatLngFromAddressURLMus(composedURL, i, globalLib.museums, centerMarkers, "CULTURE_CENTERS");
 				}
 	    break;
 	  	case globalLib.datasetCases["THEATRES"] :
 				for (var i = 0; i < hotelsData.length; i++) {
 					composedURL = GEOCODE_URL + hotelsData[i].direccion + COUNTRY_ISO + MAPS_KEY
-					getLatLngFromAddressURLMus(composedURL, i, globalLib.museums, theatreMarkers);
+					getLatLngFromAddressURLMus(composedURL, i, globalLib.museums, theatreMarkers, "THEATRES");
 				}
 	    break;
 	  	case globalLib.datasetCases["CULTURE_HOUSES"] :
 				for (var i = 0; i < hotelsData.length; i++) {
 					composedURL = GEOCODE_URL + hotelsData[i].direccion + COUNTRY_ISO + MAPS_KEY
-					getLatLngFromAddressURLMus(composedURL, i, globalLib.museums, centerMarkers);
+					getLatLngFromAddressURLMus(composedURL, i, globalLib.museums, centerMarkers, "CULTURE_HOUSES");
 				}
 	   	break;
 	}
@@ -106,103 +105,142 @@ function events_marker(market, content, map, info) {
 		})(market,content,info));
 }
 
-function getLatLngFromAddressURLRes( url, index, globalData, arrayMarkers){
-	console.log(globalData);
+function getLatLngFromAddressURLRes( url, index, globalData, arrayMarkers, type){
 	$.get(url, ( response ) => {
 				console.log(response);
 		if (response.status == "OK") {
-			var image = {
-					url: 'img/hotel.png',
-					size: new google.maps.Size(40, 40),
-					origin: new google.maps.Point(0, 0),
-					anchor: new google.maps.Point(17, 34),
-					scaledSize: new google.maps.Size(30, 30)
+			if (type == "LODGING") {
+				var image = makeMarkerImage('img/hotel.png')
+				console.log(response.results[0].geometry.location)
+				var title = ""
+
+				arrayMarkers[index] = new google.maps.Marker({
+					position: response.results[0].geometry.location,
+					title: globalData[index].nombre_comercial,
+					icon: image,
+					map : map,
+					nro: globalData[index].nro,
+					localidad: globalData[index].localidad
+				});
+
+				var content= 'Nombre: '+globalData[index].nombre_comercial + ', Dirección: '+globalData[index].direccion;
+	        	var info = new google.maps.InfoWindow();
+	        	var events= new events_marker(arrayMarkers[index], content, map, info);
+			}else{
+				var image = makeMarkerImage('img/restaurante.png');
+				arrayMarkers[index] = new google.maps.Marker({
+					position: response.results[0].geometry.location,
+					title: globalData[index].nombre_comercial,
+					icon: image,
+					nro: globalData[index].nro,
+					localidad: globalData[index].localidad
+				});
+
+				var content= 'Nombre: '+globalData[index].nombre_comercial + ', Dirección: '+globalData[index].direccion;
+	        	var info = new google.maps.InfoWindow();
+	        	var events= new events_marker(arrayMarkers[index], content, map, info);
 			}
-			console.log(response.results[0].geometry.location)
-			var title = ""
 
-			arrayMarkers[index] = new google.maps.Marker({
-				position: response.results[0].geometry.location,
-				map: map,
-				title: globalData[index].nombre_comercial,
-				icon: image,
-				nro: globalData[index].nro,
-				localidad: globalData[index].localidad
-			});
-
-			var content= 'Nombre: '+globalData[index].nombre_comercial + ', Dirección: '+globalData[index].direccion;
-      var info = new google.maps.InfoWindow();
-
-      var events= new events_marker(arrayMarkers[index], content, map, info);
+			
 		}
 	});
 }
 
-function getLatLngFromAddressURLMus( url, index, globalData, arrayMarkers){
-	console.log(globalData);
-	$.get(url, ( response ) => {
-				console.log(response);
-		if (response.status == "OK") {
-			var image = {
-					url: 'img/libros.png',
+function getLatLngFromAddressURLMus( url, index, globalData, arrayMarkers, type){
+	if (!(typeof globalData[index] === "undefined")) {
+		$.get(url, ( response ) => {
+			if (response.status == "OK") {
+				var image;
+				if (type == "MUSEUMS") {
+					image = makeMarkerImage('/img/museos.png');
+				}else if (type == "LIBRARIES") {
+					image = makeMarkerImage('img/libros');
+				}else if (type == "CULTURE_CENTERS") {
+					image = makeMarkerImage('/img/museos.png');
+				}else if (type == "THEATRES") {
+					image = makeMarkerImage('img/coctel.png');
+				}else {
+					image = makeMarkerImage('img/museos.png');
+				}
+				arrayMarkers[index] = new google.maps.Marker({
+					position: response.results[0].geometry.location,
+					title: globalData[index].nombre_del_museo,
+					icon: image,
+					nro: globalData[index].nro,
+					localidad: globalData[index].localidad
+				});
+
+				var content= 'Nombre: '+globalData[index].nombre_del_museo + ', Dirección: '+globalData[index].direccion;
+	      var info = new google.maps.InfoWindow();
+
+	      var events= new events_marker(arrayMarkers[index], content, map, info);
+			}
+		});
+	}
+}
+
+function makeMarkerImage( imageURL){
+	var image = {
+					url: imageURL,
 					size: new google.maps.Size(40, 40),
 					origin: new google.maps.Point(0, 0),
 					anchor: new google.maps.Point(17, 34),
 					scaledSize: new google.maps.Size(30, 30)
-			}
-			console.log(response.results[0].geometry.location)
+				}
+	return image;
+}
 
-			arrayMarkers[index] = new google.maps.Marker({
-				position: response.results[0].geometry.location,
-				map: map,
-				title: globalData[index].nombre_del_museo,
-				icon: image,
-				nro: globalData[index].nro,
-				localidad: globalData[index].localidad
-			});
-
-			var content= 'Nombre: '+globalData[index].nombre_del_museo + ', Dirección: '+globalData[index].direccion;
-      var info = new google.maps.InfoWindow();
-
-      var events= new events_marker(arrayMarkers[index], content, map, info);
+function addMarkersToMap( arrayMarkers ){
+	for (var i = 0; i < arrayMarkers.length; i++) {
+		if (!(typeof arrayMarkers[i]=== "undefined")) {
+			arrayMarkers[i].setMap(map);
 		}
-	});
+		
+	}
+}
+
+function removeMarkersFromMap( arrayMarkers ){
+	for (var i = 0; i < arrayMarkers.length; i++) {
+		if (!(typeof arrayMarkers[i]=== "undefined")) {
+			arrayMarkers[i].setMap(null);
+		}
+	}
 }
 
 //filters
 function filterResta(){
 	if(document.getElementById('restaurants').checked){
-		sitesHotel('restaurants');
+		addMarkersToMap(restaurantMarkers);
 	}else{
-		console.log('no');
+		removeMarkersFromMap(restaurantMarkers)
 	}
 }
 function filterMuse(){
 	if(document.getElementById('museums').checked){
-			sitesHotel('museums');
+		addMarkersToMap(museumMarkers);
 	}else{
-		console.log('no');
+		removeMarkersFromMap(museumMarkers)
 	}
 }
 function filterLib(){
 	if(document.getElementById('libraries').checked){
-		sitesHotel('libraries');
+		addMarkersToMap(librariesMarkers);
 	}else{
-		console.log('no');
+		removeMarkersFromMap(librariesMarkers)
 	}
 }
 function filterCul(){
 	if(document.getElementById('culture_center').checked){
-		sitesHotel('culture_center');
+		addMarkersToMap(centerMarkers);
 	}else{
-		console.log('no');
+		removeMarkersFromMap(centerMarkers)
 	}
 }
 function filterThe(){
 	if(document.getElementById('theatres').checked){
-		sitesHotel('theatres');
+		addMarkersToMap(theatreMarkers);
 	}else{
-		console.log('no');
+		removeMarkersFromMap(theatreMarkers)
 	}
 }
 var filter = {}
