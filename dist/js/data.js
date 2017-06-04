@@ -38,7 +38,7 @@ function loadData(type){
 	  	case globalLib.datasetCases["LODGING"] :
 	    	$.get(proxy + LODGING_URL, (data) => {
 	  			globalLib.lodging = csvToArray(data)
-          map.getMarkersFromHotels(globalLib.lodging);
+         		map.getMarkersFromHotels(globalLib.lodging);
 	 	 	});
 	    break;
 	  	case globalLib.datasetCases["MUSEUMS"] :
