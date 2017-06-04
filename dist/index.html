@@ -13,48 +13,39 @@
 	<title> Bogotando </title>
 </head>
 <body>
-	<div id="slideNav">
-					 <ul  class="side-nav  z-depth-4 fixed">
+	<div >
+					 <ul  id="slideNav" class="side-nav  z-depth-4 fixed">
+						 <div class="userView">
+							 <div class="background">
+								 <img src="img/fondo_oscuro.png" height="100%">
+							 </div>
 							 <li>
 									 <div id="logo">
-											 <img   class="responsive-img" src="img/logo.jpg" height="70%" width="70%">
+											 <img   class="responsive-img" src="img/logo_blanco.png" height="80%" width="80%">
 									 </div>
-									 <h4 class="center-align cursive">Bogotando</h4>
-							 </li>
 
+							 </li>
+							 <br>
 							 <li><div class="divider"></div></li>
-							 <li>
-									 <div class="card padding padding-top">
-											 <div class="card-header card-purple">
-													 <i class="material-icons left purple-text text-purple">cloud</i>
-											 </div>
-											 <div class="card-content" id='weather'>
-													 <p  class="cursive-weather"><strong></strong></p>
-											 </div>
-											 <div class="divider"></div>
-											 <div class="card-footer">
 
-											 </div>
-									 </div>
-							 </li>
-								<li class="no-padding">
+								<li class="">
 									 <ul id="search" class="collapsible collapsible-accordion">
 
 											 <li >
-													 <a class="collapsible-header waves-effect purple btn">Filters<i class="material-icons right white-text text-white">search</i></a>
+													 <a class="collapsible-header waves-effect cyan btn">Filtros<i class="material-icons right white-text text-white">search</i></a>
 													 <div class="collapsible-body">
 															 <ul>
-																	 <li>
-																			 <form action="#" class="padding" id='filters'>
+																	 <li id='filters'>
+																			 <form action="#" class="padding" >
 																					 <p>
 																							 <input type="checkbox" class="filled-in" id="restaurants"  />
 																							 <label for="restaurants">Restaurantes</label> <br>
 																							 <input type="checkbox" class="filled-in" id="museums"  />
-																							 <label for="museums">Museos</label>
+																							 <label for="museums">Museos</label><br>
 																							 <input type="checkbox" class="filled-in" id="libraries"  />
-																							 <label for="libraries">Librerias</label>
+																							 <label for="libraries">Librerias</label><br>
 																							 <input type="checkbox" class="filled-in" id="culture_center"  />
-																							 <label for="culture_center">Centros culturales</label>
+																							 <label for="culture_center">Centros culturales</label><br>
 																							 <input type="checkbox" class="filled-in" id="theatres"  />
 																							 <label for="theatres">Teatros</label>
 																					 </p>
@@ -95,28 +86,32 @@
 											 </li>
 									 </ul>
 							 </li>
-							 <li><a href='#statis1' id='statistics1' class=" waves-effect purple btn">Statistics
+							 <li><a href='#statis1' id='statistics1' class=" waves-effect cyan btn">Detalles
 										<i class="material-icons right white-text text-white">announcement</i></a></li>
 
-							 <li><a href='#statis2' id='statistics2' class="hide waves-effect purple btn">Details
+							 <li><a href='#statis2' id='statistics2' class="hide waves-effect cyan btn">Detalles
 										<i class="material-icons right white-text text-white">announcement</i></a></li>
 
-							 <li><a  href="#bestHouse" id='showbest' class="modal-trigger waves-effect  pink accent-3 btn">Best House
+							 <li><a  href="#bestHouse" id='showbest' class=" hide modal-trigger waves-effect  cyan  btn">
 										<i class="material-icons right white-text text-white">grade</i></a></li>
 
 							 <li><a id="restore" class="waves-effect purple btn hide"><i class="material-icons right white-text text-white">restore</i>All houses</a></li>
 
 					 </ul>
-			 </div>
-	<div class="container-fluid">
+
+		 </div>
+	<div class="container">
 		<div class="row">
-			<div class="col-md-12 map-container">
+			<div class="col s10 map-container">
 				<div id="mapDiv" class="map-container"></div>
+			</div>
+			<div class="col s2">
+				<h2>agenda</h2>
 			</div>
 		</div>
 	</div>
 
-	  
+
 	<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
 	<script src="node_modules/jquery-csv/src/jquery.csv.min.js"></script>
