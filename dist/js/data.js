@@ -31,42 +31,139 @@ function initDataSets(){
 function loadData(type){
 	switch(type) {
 	    case globalLib.datasetCases["RESTAURANTS"] :
-	    	$.get(proxy + RETAURANTS_URL, (data) => {
-	  			globalLib = csvToArray(data)
-	  		});
+        var xmlhttp = new XMLHttpRequest();
+        var url = proxy+RETAURANTS_URL;
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var myCsv = xmlhttp.responseText;
+            var jsont = csvJSON(myCsv);
+            var json =  JSON.parse(jsont);
+            globalLib.restaurants=json;
+            map.getMarkersFromData(json, type);
+
+          }
+        };
 	    break;
 	  	case globalLib.datasetCases["LODGING"] :
-	    	$.get(proxy + LODGING_URL, (data) => {
-	  			globalLib.lodging = csvToArray(data)
-         		map.getMarkersFromHotels(globalLib.lodging);
-	 	 	});
+	     var xmlhttp = new XMLHttpRequest();
+       var url = proxy+LODGING_URL;
+       xmlhttp.open("GET", url, true);
+       xmlhttp.send();
+       xmlhttp.onreadystatechange = function() {
+         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+           var myCsv = xmlhttp.responseText;
+           var jsont = csvJSON(myCsv);
+           var json =  JSON.parse(jsont);
+           globalLib.lodging=json;
+           map.getMarkersFromData(json, type);
+
+         }
+       };
+
 	    break;
 	  	case globalLib.datasetCases["MUSEUMS"] :
-	    	$.get(proxy + MUSEUMS_URL, (data) => {
-	  			globalLib.museums = csvToArray(data)
-		  	});
+        var xmlhttp = new XMLHttpRequest();
+        var url = proxy+MUSEUMS_URL;
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var myCsv = xmlhttp.responseText;
+            var jsont = csvJSON(myCsv);
+            var json =  JSON.parse(jsont);
+            globalLib.museums=json;
+
+          }
+        };
 	    break;
 	  	case globalLib.datasetCases["LIBRARIES"] :
-	    	$.get(proxy + LIBRARIES_URL, (data) => {
-	  			globalLib.libraries = csvToArray(data)
-	 	 	});
+      var xmlhttp = new XMLHttpRequest();
+      var url = proxy+LIBRARIES_URL;
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var myCsv = xmlhttp.responseText;
+            var jsont = csvJSON(myCsv);
+            var json =  JSON.parse(jsont);
+            globalLib.libraries=json;
+          }
+        };
 	    break;
 	  	case globalLib.datasetCases["CULTURE_CENTERS"] :
-	    	$.get(proxy + CULTURE_CENTERS_URL, (data) => {
-	  			globalLib.cultureCenters = csvToArray(data)
-	 	 	});
+        var xmlhttp = new XMLHttpRequest();
+        var url = proxy+CULTURE_CENTERS_URL;
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var myCsv = xmlhttp.responseText;
+            var jsont = csvJSON(myCsv);
+            var json =  JSON.parse(jsont);
+            globalLib.cultureCenters=json;
+
+          }
+        };
 	    break;
 	  	case globalLib.datasetCases["THEATRES"] :
-	    	$.get(proxy + THEATRES_URL, (data) => {
-	  			globalLib.theatres = csvToArray(data)
-	  		});
+        var xmlhttp = new XMLHttpRequest();
+        var url = proxy+THEATRES_URL;
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var myCsv = xmlhttp.responseText;
+            var jsont = csvJSON(myCsv);
+            var json =  JSON.parse(jsont);
+            globalLib.theatres=json;
+
+          }
+        };
 	    break;
 	  	case globalLib.datasetCases["CULTURE_HOUSES"] :
-	    	$.get(proxy + CULTURE_HOUSES_URL, (data) => {
-	  			globalLib.cultureCenters = csvToArray(data)
-	  		});
+        var xmlhttp = new XMLHttpRequest();
+        var url = proxy+CULTURE_HOUSES_URL;
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var myCsv = xmlhttp.responseText;
+            var jsont = csvJSON(myCsv);
+            var json =  JSON.parse(jsont);
+            globalLib.cultureHouses=json;
+            console.log(globalLib.cultureHouses);
+          }
+        };
 	   	break;
 	}
+}
+
+
+function csvJSON(csv){
+
+  var lines=csv.split("\n");
+
+  var result = [];
+
+  var headers=lines[0].split(",");
+
+  for(var i=1;i<lines.length;i++){
+
+	  var obj = {};
+	  var currentline=lines[i].split(",");
+
+	  for(var j=0;j<headers.length;j++){
+		  obj[headers[j]] = currentline[j];
+	  }
+
+	  result.push(obj);
+
+  }
+
+  //return result; //JavaScript object
+  return JSON.stringify(result); //JSON
 }
 
 //exported funcs

@@ -32,42 +32,139 @@ function initDataSets(){
 function loadData(type){
 	switch(type) {
 	    case globalLib.datasetCases["RESTAURANTS"] :
-	    	$.get(proxy + RETAURANTS_URL, (data) => {
-	  			globalLib = csvToArray(data)
-	  		});
+        var xmlhttp = new XMLHttpRequest();
+        var url = proxy+RETAURANTS_URL;
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var myCsv = xmlhttp.responseText;
+            var jsont = csvJSON(myCsv);
+            var json =  JSON.parse(jsont);
+            globalLib.restaurants=json;
+            map.getMarkersFromData(json, type);
+
+          }
+        };
 	    break;
 	  	case globalLib.datasetCases["LODGING"] :
-	    	$.get(proxy + LODGING_URL, (data) => {
-	  			globalLib.lodging = csvToArray(data)
-         		map.getMarkersFromHotels(globalLib.lodging);
-	 	 	});
+	     var xmlhttp = new XMLHttpRequest();
+       var url = proxy+LODGING_URL;
+       xmlhttp.open("GET", url, true);
+       xmlhttp.send();
+       xmlhttp.onreadystatechange = function() {
+         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+           var myCsv = xmlhttp.responseText;
+           var jsont = csvJSON(myCsv);
+           var json =  JSON.parse(jsont);
+           globalLib.lodging=json;
+           map.getMarkersFromData(json, type);
+
+         }
+       };
+
 	    break;
 	  	case globalLib.datasetCases["MUSEUMS"] :
-	    	$.get(proxy + MUSEUMS_URL, (data) => {
-	  			globalLib.museums = csvToArray(data)
-		  	});
+        var xmlhttp = new XMLHttpRequest();
+        var url = proxy+MUSEUMS_URL;
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var myCsv = xmlhttp.responseText;
+            var jsont = csvJSON(myCsv);
+            var json =  JSON.parse(jsont);
+            globalLib.museums=json;
+
+          }
+        };
 	    break;
 	  	case globalLib.datasetCases["LIBRARIES"] :
-	    	$.get(proxy + LIBRARIES_URL, (data) => {
-	  			globalLib.libraries = csvToArray(data)
-	 	 	});
+      var xmlhttp = new XMLHttpRequest();
+      var url = proxy+LIBRARIES_URL;
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var myCsv = xmlhttp.responseText;
+            var jsont = csvJSON(myCsv);
+            var json =  JSON.parse(jsont);
+            globalLib.libraries=json;
+          }
+        };
 	    break;
 	  	case globalLib.datasetCases["CULTURE_CENTERS"] :
-	    	$.get(proxy + CULTURE_CENTERS_URL, (data) => {
-	  			globalLib.cultureCenters = csvToArray(data)
-	 	 	});
+        var xmlhttp = new XMLHttpRequest();
+        var url = proxy+CULTURE_CENTERS_URL;
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var myCsv = xmlhttp.responseText;
+            var jsont = csvJSON(myCsv);
+            var json =  JSON.parse(jsont);
+            globalLib.cultureCenters=json;
+
+          }
+        };
 	    break;
 	  	case globalLib.datasetCases["THEATRES"] :
-	    	$.get(proxy + THEATRES_URL, (data) => {
-	  			globalLib.theatres = csvToArray(data)
-	  		});
+        var xmlhttp = new XMLHttpRequest();
+        var url = proxy+THEATRES_URL;
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var myCsv = xmlhttp.responseText;
+            var jsont = csvJSON(myCsv);
+            var json =  JSON.parse(jsont);
+            globalLib.theatres=json;
+
+          }
+        };
 	    break;
 	  	case globalLib.datasetCases["CULTURE_HOUSES"] :
-	    	$.get(proxy + CULTURE_HOUSES_URL, (data) => {
-	  			globalLib.cultureCenters = csvToArray(data)
-	  		});
+        var xmlhttp = new XMLHttpRequest();
+        var url = proxy+CULTURE_HOUSES_URL;
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange = function() {
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var myCsv = xmlhttp.responseText;
+            var jsont = csvJSON(myCsv);
+            var json =  JSON.parse(jsont);
+            globalLib.cultureHouses=json;
+            console.log(globalLib.cultureHouses);
+          }
+        };
 	   	break;
 	}
+}
+
+
+function csvJSON(csv){
+
+  var lines=csv.split("\n");
+
+  var result = [];
+
+  var headers=lines[0].split(",");
+
+  for(var i=1;i<lines.length;i++){
+
+	  var obj = {};
+	  var currentline=lines[i].split(",");
+
+	  for(var j=0;j<headers.length;j++){
+		  obj[headers[j]] = currentline[j];
+	  }
+
+	  result.push(obj);
+
+  }
+
+  //return result; //JavaScript object
+  return JSON.stringify(result); //JSON
 }
 
 //exported funcs
@@ -117,20 +214,34 @@ window.main = main
 
 $(document).ready(function(){
       $('.carousel').carousel();
+			$('#restaurants').change( mapLib.filter.filterResta);
+			$('#museums').change(mapLib.filter.filterMuse);
+			$('#libraries').change( mapLib.filter.filterLib);
+			$('#culture_center').change( mapLib.filter.filterCul);
+			$('#theatres').change( mapLib.filter.filterThe);
 });
 
 },{"./map":4}],4:[function(require,module,exports){
 // constans
 const GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
-const MAPS_KEY = "&key=AIzaSyAwWYDB9v1MopiTtPpUXMDaCwAlOQbtn3c";
+const MAPS_KEY = "&key=AIzaSyA_EME4XtUVfx0p4qhtLJujPci1QzY20qs";
 const COUNTRY_ISO = ",Bogota"
 const BOG_LAT_LOG = {lat: 4.6097100, lng: -74.0817500};
+
 // Dependencies
 var globalLib = require("./globalLib")
 var data = require("./data")
 // map instace
 var map;
 var hotelMarkers = [];
+var restaurantMarkers = [];
+var museumMarkers = [];
+var librariesMarkers = [];
+var centerMarkers = [];
+var theatreMarkers = [];
+
+var hotelSelected=false;
+var hotelSeleMarker;
 
 function initGoogleMap() {
 	map = new google.maps.Map(document.getElementById('mapDiv'), {
@@ -141,32 +252,193 @@ function initGoogleMap() {
 	console.log("Map loaded");
 }
 
-function getMarkersFromHotels( hotelsData ){
+function getMarkersFromData( hotelsData, type ){
 	var composedURL = ""
-
-	for (var i = 0; i < hotelsData.length; i++) {
-		composedURL = GEOCODE_URL + hotelsData[i].direccion + COUNTRY_ISO + MAPS_KEY
-		getLatLngFromAddressURL(composedURL, i, globalLib.lodging);
+	console.log(globalLib);
+	switch(type) {
+	    case globalLib.datasetCases["RESTAURANTS"] :
+				for (var i = 0; i < hotelsData.length; i++) {
+					composedURL = GEOCODE_URL + hotelsData[i].direccion + COUNTRY_ISO + MAPS_KEY
+					getLatLngFromAddressURLRes(composedURL, i, globalLib.restaurants, restaurantMarkers);
+				}
+	    break;
+			case globalLib.datasetCases["LODGING"] :
+				for (var i = 0; i < hotelsData.length; i++) {
+					composedURL = GEOCODE_URL + hotelsData[i].direccion + COUNTRY_ISO + MAPS_KEY
+					getLatLngFromAddressURLRes(composedURL, i, globalLib.lodging, hotelMarkers);
+				}
+	    break;
+	  	case globalLib.datasetCases["MUSEUMS"] :
+				for (var i = 0; i < hotelsData.length; i++) {
+					composedURL = GEOCODE_URL + hotelsData[i].direccion + COUNTRY_ISO + MAPS_KEY
+					getLatLngFromAddressURLMus(composedURL, i, globalLib.museums, museumMarkers);
+				}
+	    break;
+	  	case globalLib.datasetCases["LIBRARIES"] :
+				for (var i = 0; i < hotelsData.lengtmuseumMarkersh; i++) {
+					composedURL = GEOCODE_URL + hotelsData[i].direccion + COUNTRY_ISO + MAPS_KEY
+					getLatLngFromAddressURLMus(composedURL, i, globalLib.museums, librariesMarkers);
+				}
+	    break;
+	  	case globalLib.datasetCases["CULTURE_CENTERS"] :
+				for (var i = 0; i < hotelsData.length; i++) {
+					composedURL = GEOCODE_URL + hotelsData[i].direccion + COUNTRY_ISO + MAPS_KEY
+					getLatLngFromAddressURLMus(composedURL, i, globalLib.museums, centerMarkers);
+				}
+	    break;
+	  	case globalLib.datasetCases["THEATRES"] :
+				for (var i = 0; i < hotelsData.length; i++) {
+					composedURL = GEOCODE_URL + hotelsData[i].direccion + COUNTRY_ISO + MAPS_KEY
+					getLatLngFromAddressURLMus(composedURL, i, globalLib.museums, theatreMarkers);
+				}
+	    break;
+	  	case globalLib.datasetCases["CULTURE_HOUSES"] :
+				for (var i = 0; i < hotelsData.length; i++) {
+					composedURL = GEOCODE_URL + hotelsData[i].direccion + COUNTRY_ISO + MAPS_KEY
+					getLatLngFromAddressURLMus(composedURL, i, globalLib.museums, centerMarkers);
+				}
+	   	break;
 	}
-	
+
+
 }
 
-function getLatLngFromAddressURL( url, index, globalData ){
+function events_marker(market, content, map, info) {
+
+    google.maps.event.addListener(market, 'mouseover', (function(market,content,info) {
+        return function () {
+            info.setContent(content);
+            info.open(map,market);
+        }
+    })(market,content,info));
+
+    google.maps.event.addListener(market, 'mouseout', (function(market,content,info) {
+        return function () {
+            info.close(map,market);
+        }
+    })(market,content,info));
+
+		google.maps.event.addListener(market, 'click', (function(market,content,info) {
+				return function (market) {
+						for ( i = 0; i < hotelMarkers.length; i++) {
+
+					map	}
+
+						hotelSelected= true;
+						hotelSeleMarker= market;
+				}
+		})(market,content,info));
+}
+
+function getLatLngFromAddressURLRes( url, index, globalData, arrayMarkers){
+	console.log(globalData);
 	$.get(url, ( response ) => {
+				console.log(response);
 		if (response.status == "OK") {
+			var image = {
+					url: 'img/hotel.png',
+					size: new google.maps.Size(40, 40),
+					origin: new google.maps.Point(0, 0),
+					anchor: new google.maps.Point(17, 34),
+					scaledSize: new google.maps.Size(30, 30)
+			}
 			console.log(response.results[0].geometry.location)
-			hotelMarkers[index] = new google.maps.Marker({
+			var title = ""
+
+			arrayMarkers[index] = new google.maps.Marker({
 				position: response.results[0].geometry.location,
 				map: map,
-				title: globalData[index].nombre_comercial
+				title: globalData[index].nombre_comercial,
+				icon: image,
+				nro: globalData[index].nro,
+				localidad: globalData[index].localidad
 			});
-			//console.log(hotelMarkers)
+
+			var content= 'Nombre: '+globalData[index].nombre_comercial + ', Dirección: '+globalData[index].direccion;
+      var info = new google.maps.InfoWindow();
+
+      var events= new events_marker(arrayMarkers[index], content, map, info);
 		}
 	});
 }
 
+function getLatLngFromAddressURLMus( url, index, globalData, arrayMarkers){
+	console.log(globalData);
+	$.get(url, ( response ) => {
+				console.log(response);
+		if (response.status == "OK") {
+			var image = {
+					url: 'img/libros.png',
+					size: new google.maps.Size(40, 40),
+					origin: new google.maps.Point(0, 0),
+					anchor: new google.maps.Point(17, 34),
+					scaledSize: new google.maps.Size(30, 30)
+			}
+			console.log(response.results[0].geometry.location)
+
+			arrayMarkers[index] = new google.maps.Marker({
+				position: response.results[0].geometry.location,
+				map: map,
+				title: globalData[index].nombre_del_museo,
+				icon: image,
+				nro: globalData[index].nro,
+				localidad: globalData[index].localidad
+			});
+
+			var content= 'Nombre: '+globalData[index].nombre_del_museo + ', Dirección: '+globalData[index].direccion;
+      var info = new google.maps.InfoWindow();
+
+      var events= new events_marker(arrayMarkers[index], content, map, info);
+		}
+	});
+}
+
+//filters
+function filterResta(){
+	if(document.getElementById('restaurants').checked){
+		sitesHotel('restaurants');
+	}else{
+		console.log('no');
+	}
+}
+function filterMuse(){
+	if(document.getElementById('museums').checked){
+			sitesHotel('museums');
+	}else{
+		console.log('no');
+	}
+}
+function filterLib(){
+	if(document.getElementById('libraries').checked){
+		sitesHotel('libraries');
+	}else{
+		console.log('no');
+	}
+}
+function filterCul(){
+	if(document.getElementById('culture_center').checked){
+		sitesHotel('culture_center');
+	}else{
+		console.log('no');
+	}
+}
+function filterThe(){
+	if(document.getElementById('theatres').checked){
+		sitesHotel('theatres');
+	}else{
+		console.log('no');
+	}
+}
+var filter = {}
+
+filter.filterResta=filterResta
+filter.filterMuse=filterMuse
+filter.filterLib=filterLib
+filter.filterCul=filterCul
+filter.filterThe=filterThe
 //Exported functions
 module.exports.initGoogleMap = initGoogleMap
-module.exports.getMarkersFromHotels = getMarkersFromHotels
+module.exports.getMarkersFromData = getMarkersFromData
+module.exports.filter = filter
 
 },{"./data":1,"./globalLib":2}]},{},[3]);
