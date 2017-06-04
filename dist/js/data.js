@@ -1,4 +1,3 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 //Global variables
 const RETAURANTS_URL= "http://datosabiertos.vivelabbogota.com/dataset/39293ce0-f153-4209-a014-3fbc8b054eec/resource/38f5e305-a733-429f-a55d-d4999a88126d/download/restaurantes.csv";
 const LODGING_URL="http://datosabiertos.vivelabbogota.com/dataset/98d1afc0-eecd-4251-b9a9-b7d2c691298f/resource/b1a5b668-44e7-4b0d-883c-a244734e13c3/download/alojamiento.csv";
@@ -72,74 +71,3 @@ function loadData(type){
 //exported funcs
 module.exports.initDataSets = initDataSets
 
-
-},{"./globalLib":2}],2:[function(require,module,exports){
-var datasetCases = {
-	"RESTAURANTS" : "RESTAURANTS",
-	"LODGING" : "LODGING",
-	"MUSEUMS" : "MUSEUMS",
-	"LIBRARIES" : "LIBRARIES",
-	"CULTURE_CENTERS" : "CULTURE_CENTERS",
-	"THEATRES" : "THEATRES",
-	"CULTURE_HOUSES" : "CULTURE_HOUSES"
-}
-
-var restaurants = []
-var lodging = []
-var museums = []
-var libraries = []
-var cultureCenters = []
-var theatres = []
-var cultureHouses = []
-
-module.exports.restaurants = restaurants
-module.exports.lodging = lodging
-module.exports.museums = museums
-module.exports.libraries = libraries
-module.exports.cultureCenters = cultureCenters
-module.exports.theatres = theatres
-module.exports.cultureHouses = cultureHouses
-module.exports.datasetCases = datasetCases
-
-},{}],3:[function(require,module,exports){
-//dependencies
-var mapLib = require("./map")
-var data = require("./data")
-
-
-function initGoogleMap() {
-	mapLib.initGoogleMap();
-}
-
-var main = {}
-
-main.initGoogleMap = initGoogleMap
-
-window.main = main
-
-$(document).ready(function(){
-      $('.carousel').carousel();
-      data.initDataSets();
-});
-},{"./data":1,"./map":4}],4:[function(require,module,exports){
-
-var globalLib = require("./globalLib")
-
-// constans
-const BOG_LAT_LOG = {lat: 4.6097100, lng: -74.0817500};
-
-// map instace
-var map;
-
-function initGoogleMap() {
-	map = new google.maps.Map(document.getElementById('mapDiv'), {
-		center: BOG_LAT_LOG,
-		zoom: 11
-	});
-	console.log("Map loaded");
-}
-
-//Exported functions
-module.exports.initGoogleMap = initGoogleMap
-
-},{"./globalLib":2}]},{},[3]);

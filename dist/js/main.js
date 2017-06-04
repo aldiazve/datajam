@@ -1,15 +1,10 @@
-var otro = require("./otro");
-var map;
+//dependencies
+var mapLib = require("./map")
+var data = require("./data")
 
-var bogLatLng = {lat: 4.6097100, lng: -74.0817500};
 
 function initGoogleMap() {
-	map = new google.maps.Map(document.getElementById('mapDiv'), {
-		center: bogLatLng,
-		zoom: 11
-	});
-
-	console.log("Map loaded");
+	mapLib.initGoogleMap();
 }
 
 var main = {}
@@ -20,4 +15,5 @@ window.main = main
 
 $(document).ready(function(){
       $('.carousel').carousel();
+      data.initDataSets();
 });
