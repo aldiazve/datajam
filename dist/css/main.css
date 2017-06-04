@@ -2,14 +2,7 @@
 .map-container{
 	height: 700px;
 }
-.preloader-wrapper {
-	position: absolute;
-	top :0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	margin: auto;
-}
+
 .side-nav {
     transform: translateX(0%) !important;
 }
@@ -52,7 +45,8 @@
 	margin-left: 10%;
 	position: absolute;
 }
+#spi{
+	height: 25%;
+	width: 25%,
 
-.spinner{
-	padding-left: 50%;
 }
