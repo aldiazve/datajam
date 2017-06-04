@@ -7,6 +7,7 @@ const BOG_LAT_LOG = {lat: 4.6097100, lng: -74.0817500};
 // Dependencies
 var globalLib = require("./globalLib")
 var data = require("./data")
+var main = require("./main")
 // map instace
 var map;
 var hotelMarkers = [];
@@ -33,7 +34,7 @@ var hotelSeleMarker;
 function initGoogleMap() {
 	map = new google.maps.Map(document.getElementById('mapDiv'), {
 		center: BOG_LAT_LOG,
-		zoom: 11
+		zoom: 16
 	});
 	data.initDataSets()
 
@@ -221,6 +222,10 @@ function hotelOnClick(){
 
 	hotelSelected = true;
 	hotelSeleMarker = this;
+	//details
+	console.log(this);
+	main.detail_card(this);
+
 }
  
 function getCleanedString(cadena){
@@ -283,7 +288,7 @@ function getLatLngFromAddressURLRes( url, index, globalData, arrayMarkers, type)
 	        	var events= new events_marker(arrayMarkers[index], content, map, info);
 			}
 
-			
+
 		}
 	});
 }
@@ -337,7 +342,7 @@ function addMarkersToMap( arrayMarkers ){
 		if (!(typeof arrayMarkers[i]=== "undefined")) {
 			arrayMarkers[i].setMap(map);
 		}
-		
+
 	}
 }
 

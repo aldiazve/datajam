@@ -2,6 +2,24 @@
 .map-container{
 	height: 700px;
 }
+.side-nav {
+    transform: translateX(0%) !important;
+}
+
+.tabs .tab a{
+    color:  #006064 ;
+} /*Black color to the text*/
+
+.tabs .tab a.active {
+    background-color: transparent;
+    color: #006064 ;
+}
+.tabs .tab a:hover {
+    color: #18ffff ;
+}
+.tabs .indicator {
+	background-color: #006064 ;
+}
 
 #mapDiv {
 	width: 100%;
@@ -21,4 +39,8 @@
 
 	height: 98.8%;
 
+}
+#detail{
+	margin-left: 10%;
+	position: absolute;
 }

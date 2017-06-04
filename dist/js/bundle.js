@@ -205,13 +205,13 @@ module.exports.datasetCases = datasetCases
 },{}],3:[function(require,module,exports){
 //dependencies
 var mapLib = require("./map");
-
+var globalLib = require("./globalLib");
 function initGoogleMap() {
 	mapLib.initGoogleMap();
 }
 
 function showStatistics(){
-	
+
 }
 
 var main = {}
@@ -221,6 +221,40 @@ main.showStatistics = showStatistics
 
 window.main = main
 
+function detail_card(origin) {
+		var hotel;
+		$('.card').removeClass('hide');
+
+		//find
+		for (var i = 0; i < globalLib.lodging.length; i++) {
+				if(globalLib.lodging[i].nro===origin.nro){
+					hotel= globalLib.lodging[i];
+					console.log(hotel);
+					break;
+				}
+		}
+		var name='Nombre: '+hotel.nombre_comercial;
+    var phone= 'Telefono: '+hotel.telefono;
+    var email = 'Email: '+ hotel.email;
+		var price = 'Rango Tarifa: ' + hotel.rango_tarifa;
+		var type = 'Tipo: '+ hotel.tipo;
+		var local= 'Localidad: '+ hotel.localidad;
+
+    //DOM traversing
+    $('#statis2').removeClass('hide');
+    $('.card-title').text(hotel.nombre_comercial);
+    $('#ad').text('Dirección: '+hotel.direccion);
+    $('#name').text(name);
+		$('#email').text(email);
+    $('#phone').text(phone);
+		$('#type').text(type);
+		$('#local').text(local);
+		$('#price').text(price);
+
+}
+function showStatistics(){
+	$('#chart').removeClass('hide');
+}
 $(document).ready(function(){
       $('.carousel').carousel();
 		$('#restaurants').change( mapLib.filter.filterResta);
@@ -229,9 +263,12 @@ $(document).ready(function(){
 		$('#culture_center').change( mapLib.filter.filterCul);
 		$('#theatres').change( mapLib.filter.filterThe);
 		$('#statistics1').on('click', main.showStatistics);
-});
 
-},{"./map":4}],4:[function(require,module,exports){
+
+});
+module.exports.detail_card = detail_card
+
+},{"./globalLib":2,"./map":4}],4:[function(require,module,exports){
 // constans
 const GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
 const MAPS_KEY = "&key=AIzaSyA_EME4XtUVfx0p4qhtLJujPci1QzY20qs";
@@ -241,6 +278,7 @@ const BOG_LAT_LOG = {lat: 4.6097100, lng: -74.0817500};
 // Dependencies
 var globalLib = require("./globalLib")
 var data = require("./data")
+var main = require("./main")
 // map instace
 var map;
 var hotelMarkers = [];
@@ -267,7 +305,7 @@ var hotelSeleMarker;
 function initGoogleMap() {
 	map = new google.maps.Map(document.getElementById('mapDiv'), {
 		center: BOG_LAT_LOG,
-		zoom: 11
+		zoom: 16
 	});
 	data.initDataSets()
 
@@ -455,6 +493,10 @@ function hotelOnClick(){
 
 	hotelSelected = true;
 	hotelSeleMarker = this;
+	//details
+	console.log(this);
+	main.detail_card(this);
+
 }
  
 function getCleanedString(cadena){
@@ -517,7 +559,7 @@ function getLatLngFromAddressURLRes( url, index, globalData, arrayMarkers, type)
 	        	var events= new events_marker(arrayMarkers[index], content, map, info);
 			}
 
-			
+
 		}
 	});
 }
@@ -571,7 +613,7 @@ function addMarkersToMap( arrayMarkers ){
 		if (!(typeof arrayMarkers[i]=== "undefined")) {
 			arrayMarkers[i].setMap(map);
 		}
-		
+
 	}
 }
 
@@ -631,4 +673,4 @@ module.exports.initGoogleMap = initGoogleMap
 module.exports.getMarkersFromData = getMarkersFromData
 module.exports.filter = filter
 
-},{"./data":1,"./globalLib":2}]},{},[3]);
+},{"./data":1,"./globalLib":2,"./main":3}]},{},[3]);

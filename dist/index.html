@@ -13,7 +13,7 @@
 	<title> Bogotando </title>
 </head>
 <body>
-	<div >
+	<div id="main">
 					 <ul  id="slideNav" class="side-nav  z-depth-4 fixed">
 						 <div class="userView">
 							 <div class="background">
@@ -86,7 +86,7 @@
 											 </li>
 									 </ul>
 							 </li>
-							 <li><a href='#statis1' id='statistics1' class=" waves-effect cyan btn">Detalles
+							 <li><a href='#chart' id='statistics1' class=" waves-effect cyan btn">Detalles
 										<i class="material-icons right white-text text-white">announcement</i></a></li>
 
 							 <li><a href='#statis2' id='statistics2' class="hide waves-effect cyan btn">Detalles
@@ -111,19 +111,57 @@
 		</div>
 	</div>
 	<div>
+
+	</div>
+
+	<div class="container">
+		<div class="row" id='detail'>
+			<div class="card z-depth-5 hide">
+
+        <div class="card-content">
+            <span class="card-title "></span>
+             <p id='ad'></p>
+        </div>
+        <div class="card-tabs">
+            <ul class="tabs tabs-fixed-width">
+                <li class="tab "><a class="active" href="#contact">Contacto</a></li>
+                <li class="tab "><a href="#info">Información</a></li>
+                <li class="tab "><a href="#prices">Precio</a></li>
+
+
+            </ul>
+        </div>
+        <div class="card-content grey lighten-4">
+            <div id="contact" class="cursive">
+                <p id='email'></p>
+                <p id='phone'></p>
+            </div>
+            <div id='info' class="cursive">
+                <p id='type'></p>
+                <p id='local'></p>
+            </div>
+            <div id='prices'  class="cursive">
+							<p id='price'></p>
+            </div>
+
+
+        </div>
+    </div>
+		</div>
 		<div class="row">
-			<div class="col s8 map-container">
-				<div id="chart"></div>
-				<div id="lala"></div>
+			<div class="col s7 offset-s7">
+				<div class="card z-depth-5 hide" id='chart'>
+						<div id="chart"></div>
+				</div>
+
 			</div>
 		</div>
 	</div>
 
-
 	<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
 	<script src="node_modules/jquery-csv/src/jquery.csv.min.js"></script>
-	<!-- Load d3.js and c3.js -->	
+	<!-- Load d3.js and c3.js -->
 	<script src="https://d3js.org/d3.v3.min.js"></script>
 	<script src="js/c3.min.js"></script>
 	<script type="text/javascript" src="js/bundle.js"></script>
