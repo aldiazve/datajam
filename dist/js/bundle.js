@@ -211,7 +211,7 @@ function initGoogleMap() {
 }
 
 function showStatistics(){
-	
+
 }
 
 var main = {}
@@ -224,6 +224,7 @@ window.main = main
 function detail_card(origin) {
 		var hotel;
 		$('.card').removeClass('hide');
+
 		//find
 		for (var i = 0; i < globalLib.lodging.length; i++) {
 				if(globalLib.lodging[i].nro===origin.nro){
@@ -235,8 +236,8 @@ function detail_card(origin) {
 		var name='Nombre: '+hotel.nombre_comercial;
     var phone= 'Telefono: '+hotel.telefono;
     var email = 'Email: '+ hotel.email;
-		var price = 'Rango Tarifa:' + hotel.rango_tarifa;
-		var type = 'Tipo :'+ hotel.tipo;
+		var price = 'Rango Tarifa: ' + hotel.rango_tarifa;
+		var type = 'Tipo: '+ hotel.tipo;
 		var local= 'Localidad: '+ hotel.localidad;
 
     //DOM traversing
@@ -251,7 +252,9 @@ function detail_card(origin) {
 		$('#price').text(price);
 
 }
-
+function showStatistics(){
+	$('#chart').removeClass('hide');
+}
 $(document).ready(function(){
       $('.carousel').carousel();
 		$('#restaurants').change( mapLib.filter.filterResta);
@@ -260,6 +263,8 @@ $(document).ready(function(){
 		$('#culture_center').change( mapLib.filter.filterCul);
 		$('#theatres').change( mapLib.filter.filterThe);
 		$('#statistics1').on('click', main.showStatistics);
+
+
 });
 module.exports.detail_card = detail_card
 
