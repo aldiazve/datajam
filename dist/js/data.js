@@ -9,7 +9,7 @@ const CULTURE_HOUSES_URL= "http://datosabiertos.vivelabbogota.com/dataset/58f8f6
 
 //dependencies
 var globalLib = require("./globalLib");
-var lala = []
+var map = require("./map");
 //
 var proxy='https://cors-anywhere.herokuapp.com/';
 
@@ -38,6 +38,7 @@ function loadData(type){
 	  	case globalLib.datasetCases["LODGING"] :
 	    	$.get(proxy + LODGING_URL, (data) => {
 	  			globalLib.lodging = csvToArray(data)
+          map.getMarkersFromHotels(globalLib.lodging);
 	 	 	});
 	    break;
 	  	case globalLib.datasetCases["MUSEUMS"] :
@@ -70,4 +71,3 @@ function loadData(type){
 
 //exported funcs
 module.exports.initDataSets = initDataSets
-

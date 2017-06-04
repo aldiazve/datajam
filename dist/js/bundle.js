@@ -10,7 +10,7 @@ const CULTURE_HOUSES_URL= "http://datosabiertos.vivelabbogota.com/dataset/58f8f6
 
 //dependencies
 var globalLib = require("./globalLib");
-var lala = []
+var map = require("./map");
 //
 var proxy='https://cors-anywhere.herokuapp.com/';
 
@@ -39,6 +39,7 @@ function loadData(type){
 	  	case globalLib.datasetCases["LODGING"] :
 	    	$.get(proxy + LODGING_URL, (data) => {
 	  			globalLib.lodging = csvToArray(data)
+          map.getMarkersFromHotels(globalLib.lodging);
 	 	 	});
 	    break;
 	  	case globalLib.datasetCases["MUSEUMS"] :
@@ -72,8 +73,7 @@ function loadData(type){
 //exported funcs
 module.exports.initDataSets = initDataSets
 
-
-},{"./globalLib":2}],2:[function(require,module,exports){
+},{"./globalLib":2,"./map":4}],2:[function(require,module,exports){
 var datasetCases = {
 	"RESTAURANTS" : "RESTAURANTS",
 	"LODGING" : "LODGING",
@@ -103,9 +103,7 @@ module.exports.datasetCases = datasetCases
 
 },{}],3:[function(require,module,exports){
 //dependencies
-var mapLib = require("./map")
-var data = require("./data")
-
+var mapLib = require("./map");
 
 function initGoogleMap() {
 	mapLib.initGoogleMap();
@@ -119,27 +117,66 @@ window.main = main
 
 $(document).ready(function(){
       $('.carousel').carousel();
-      data.initDataSets();
 });
-},{"./data":1,"./map":4}],4:[function(require,module,exports){
 
-var globalLib = require("./globalLib")
-
+},{"./map":4}],4:[function(require,module,exports){
 // constans
+const GEOCODE_URL = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
+const MAPS_KEY = "&key=AIzaSyAwWYDB9v1MopiTtPpUXMDaCwAlOQbtn3c";
+const COUNTRY_ISO = "Bogota"
 const BOG_LAT_LOG = {lat: 4.6097100, lng: -74.0817500};
-
+// Dependencies
+var globalLib = require("./globalLib")
+var data = require("./data")
 // map instace
 var map;
+var hotelMarkers = [];
+var geocoder;
 
 function initGoogleMap() {
 	map = new google.maps.Map(document.getElementById('mapDiv'), {
 		center: BOG_LAT_LOG,
 		zoom: 11
 	});
+	geocoder = new google.maps.Geocoder();
+	data.initDataSets()
 	console.log("Map loaded");
+
+}
+
+
+function getMarkersFromHotels( hotelsData ){
+	var composedURL = ""
+
+	for (var i = 0; i < hotelsData.length; i++) {
+		var address = hotelsData[i].direccion + "Bogota";
+		geocoder.geocode( { 'address': address  }, function(results, status) {
+			console.log(results);
+			if (status == google.maps.GeocoderStatus.OK) {
+					hotelMarkers[i] = new google.maps.Marker({
+					position: results[0].geometry.location,
+					map: map
+					//title: hotelsData[i].nombre_comercial
+				});
+			}
+		});
+	}
+
+	/*
+	geocoder.geocode( { 'address': address}, function(results, status) {
+		if (status == google.maps.GeocoderStatus.OK) {
+			hotelMarkers[i] = new google.maps.Marker({
+				position: response.results[0].geometry.location,
+				map: map
+				//title: hotelsData[i].nombre_comercial
+			});
+			console.log(i);
+	*/
+
 }
 
 //Exported functions
 module.exports.initGoogleMap = initGoogleMap
+module.exports.getMarkersFromHotels = getMarkersFromHotels
 
-},{"./globalLib":2}]},{},[3]);
+},{"./data":1,"./globalLib":2}]},{},[3]);

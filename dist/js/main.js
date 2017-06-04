@@ -1,7 +1,5 @@
 //dependencies
-var mapLib = require("./map")
-var data = require("./data")
-
+var mapLib = require("./map");
 
 function initGoogleMap() {
 	mapLib.initGoogleMap();
@@ -15,5 +13,4 @@ window.main = main
 
 $(document).ready(function(){
       $('.carousel').carousel();
-      data.initDataSets();
 });
