@@ -17,6 +17,14 @@ var librariesMarkers = [];
 var centerMarkers = [];
 var theatreMarkers = [];
 
+var closerPlaces = { 
+	"RESTAURANTS" : 0,
+	"MUSEUMS" : 0,
+	"LIBRARIES" : 0,
+	"CULTURE_CENTERS" : 0,
+	"THEATRES" : 0
+};
+
 var hotelSelected=false;
 var hotelSeleMarker;
 
@@ -94,6 +102,25 @@ function events_marker(marker, content, map, info) {
 	        }
 	    })(marker,content,info));
 
+	    //marker.addListener('click', hotelOnClick);
+	}
+}
+
+function eventsMakerHotel(marker, content, map, info) {
+	if (!(typeof marker === "undefined")){
+		 google.maps.event.addListener(marker, 'mouseover', (function(marker,content,info) {
+	        return function () {
+	            info.setContent(content);
+	            info.open(map,marker);
+	        }
+	    })(marker,content,info));
+
+	    google.maps.event.addListener(marker, 'mouseout', (function(marker,content,info) {
+	        return function () {
+	            info.close(map,marker);
+	        }
+	    })(marker,content,info));
+
 	    marker.addListener('click', hotelOnClick);
 	}
 }
@@ -105,6 +132,60 @@ function hotelOnClick(){
 		}
 	}
 	this.setMap(map);
+
+	var markerLocal = getCleanedString(this.localidad)
+
+	for (var i = 0; i < globalLib.restaurants.length; i++) {
+		if (!(globalLib.restaurants[i].nro == "")) {
+			console.log(getCleanedString(globalLib.restaurants[i].localidad) == markerLocal);
+			if (getCleanedString(globalLib.restaurants[i].localidad) == markerLocal) {
+				closerPlaces["RESTAURANTS"] += 1;
+			}	
+		}
+	}
+	for (var i = 0; i < globalLib.museums.length; i++) {
+		if (globalLib.museums[i].localidad == this.localidad) {
+			closerPlaces["MUSEUMS"] += 1;
+		}	
+	}
+	for (var i = 0; i < globalLib.libraries.length; i++) {
+		if (globalLib.libraries[i].localidad == this.localidad) {
+			closerPlaces["LIBRARIES"] += 1;
+		}	
+	}
+	for (var i = 0; i < globalLib.cultureCenters.length; i++) {
+		if (globalLib.cultureCenters[i].localidad == this.localidad) {
+			closerPlaces["CULTURE_CENTERS"] += 1;
+		}	
+	}
+	for (var i = 0; i < globalLib.theatres.length; i++) {
+		if (globalLib.theatres[i].localidad == this.localidad) {
+			closerPlaces["THEATRES"] += 1;
+		}	
+	}
+
+	var chart = c3.generate({
+          data: {
+              columns: [
+                  ['Museos Cercanos: ', closerPlaces["MUSEUMS"]],
+                  ['Restaurantes Cercanos: ', closerPlaces["RESTAURANTS"]],
+                  ['Librerías Cercanas: ', closerPlaces["LIBRARIES"]],
+                  ['Teatros Cercanos: ', closerPlaces["THEATRES"]],
+                  ['Centros Culturales Cercanos: ', closerPlaces["CULTURE_CENTERS"]]
+              ],
+              type : 'donut',
+          },
+          donut: {
+              title: "Lugares de interés"
+          },
+          size: {
+
+          }
+
+      });
+
+	console.log(closerPlaces);
+
 	hotelSelected = true;
 	hotelSeleMarker = this;
 	//details
@@ -112,31 +193,38 @@ function hotelOnClick(){
 	main.detail_card(this);
 
 }
-		/*
-		 function(marker,content,info) {
-				;
-				return function (marker) {
+ 
+function getCleanedString(cadena){
+   // Definimos los caracteres que queremos eliminar
+   var specialChars = "!@#$^&%*()+=-[]\/{}|:<>?,.";
 
-						for ( i = 0; i < hotelMarkers.length; i++) {
-							if (!(typeof hotelMarkers[i]=== "undefined")) {
-								hotelMarkers[i].setMap(null);
-							}
-						}
-						marker.setMap(map);
-						hotelSelected= true;
-						hotelSeleMarker= marker;
-				}
-		})(marker,content,info));
-		*/
+   // Los eliminamos todos
+   for (var i = 0; i < specialChars.length; i++) {
+       cadena= cadena.replace(new RegExp("\\" + specialChars[i], 'gi'), '');
+   }
+
+   // Quitamos espacios y los sustituimos por _ porque nos gusta mas asi
+   cadena = cadena.replace(/ /g,"");
+
+   // Quitamos acentos y "ñ". Fijate en que va sin comillas el primer parametro
+   cadena = cadena.replace(/á/gi,"a");
+   cadena = cadena.replace(/é/gi,"e");
+   cadena = cadena.replace(/í/gi,"i");
+   cadena = cadena.replace(/ó/gi,"o");
+   cadena = cadena.replace(/ú/gi,"u");
+   cadena = cadena.replace(/ñ/gi,"n");
+
+   // Lo queremos devolver limpio en minusculas
+   cadena = cadena.toUpperCase();
+   return cadena;
+}
 
 
 function getLatLngFromAddressURLRes( url, index, globalData, arrayMarkers, type){
 	$.get(url, ( response ) => {
-				console.log(response);
 		if (response.status == "OK") {
 			if (type == "LODGING") {
 				var image = makeMarkerImage('img/hotel.png')
-				console.log(response.results[0].geometry.location)
 				var title = ""
 
 				arrayMarkers[index] = new google.maps.Marker({
@@ -150,7 +238,7 @@ function getLatLngFromAddressURLRes( url, index, globalData, arrayMarkers, type)
 
 				var content= 'Nombre: '+globalData[index].nombre_comercial + ', Dirección: '+globalData[index].direccion;
 	        	var info = new google.maps.InfoWindow();
-	        	var events= new events_marker(arrayMarkers[index], content, map, info);
+	        	var events= new eventsMakerHotel(arrayMarkers[index], content, map, info);
 			}else{
 				var image = makeMarkerImage('img/restaurante.png');
 				arrayMarkers[index] = new google.maps.Marker({
@@ -183,9 +271,9 @@ function getLatLngFromAddressURLMus( url, index, globalData, arrayMarkers, type)
 				}else if (type == "CULTURE_CENTERS") {
 					image = makeMarkerImage('/img/museos.png');
 				}else if (type == "THEATRES") {
-					image = makeMarkerImage('img/coctel.png');
+					image = makeMarkerImage('img/teatro.png');
 				}else {
-					image = makeMarkerImage('img/museos.png');
+					image = makeMarkerImage('img/casaCultural.png');
 				}
 				arrayMarkers[index] = new google.maps.Marker({
 					position: response.results[0].geometry.location,
