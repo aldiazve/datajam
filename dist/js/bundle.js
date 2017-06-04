@@ -250,6 +250,9 @@ var librariesMarkers = [];
 var centerMarkers = [];
 var theatreMarkers = [];
 
+var directionService;
+var directionRenderer;
+
 var closerPlaces = { 
 	"RESTAURANTS" : 0,
 	"MUSEUMS" : 0,
@@ -258,7 +261,7 @@ var closerPlaces = {
 	"THEATRES" : 0
 };
 
-var hotelSelected=false;
+var hotelSelected = false;
 var hotelSeleMarker;
 
 function initGoogleMap() {
@@ -267,7 +270,32 @@ function initGoogleMap() {
 		zoom: 11
 	});
 	data.initDataSets()
+
+	directionService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
 	console.log("Map loaded");
+}
+
+//draw on the map the route between two points.
+function getRoute( destinationMarker ){
+	var originPoint = hotelSeleMarker.position;
+	var request = {
+	    origin: originPoint,
+	    destination: destinationMarker.position,
+	    travelMode: 'TRANSIT',
+	    transitOptions: {
+		    modes: ['BUS']
+		},
+  	};
+  	directionsRenderer.setPanel(document.getElementById('routeDraw'))
+	directionService.route(request, function(result, status) {
+		console.log(status);
+	    if (status == 'OK') {
+	      directionsRenderer.setDirections(result);
+	      
+	    }
+  	});
 }
 
 function getMarkersFromData( hotelsData, type ){
@@ -335,8 +363,12 @@ function events_marker(marker, content, map, info) {
 	        }
 	    })(marker,content,info));
 
-	    //marker.addListener('click', hotelOnClick);
+	    marker.addListener('click', drawRoute);
 	}
+}
+
+function drawRoute(){
+	getRoute( this );
 }
 
 function eventsMakerHotel(marker, content, map, info) {
@@ -365,6 +397,8 @@ function hotelOnClick(){
 		}
 	}
 	this.setMap(map);
+	map.setZoom(12);
+	map.panTo(this.position);
 
 	var markerLocal = getCleanedString(this.localidad)
 
