@@ -256,7 +256,7 @@ function showStatistics(){
 	$('#chart').removeClass('hide');
 }
 $(document).ready(function(){
-      $('.carousel').carousel();
+    $('.carousel').carousel();
 		$('#restaurants').change( mapLib.filter.filterResta);
 		$('#museums').change(mapLib.filter.filterMuse);
 		$('#libraries').change( mapLib.filter.filterLib);
