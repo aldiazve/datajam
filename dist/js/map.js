@@ -78,32 +78,52 @@ function getMarkersFromData( hotelsData, type ){
 
 }
 
-function events_marker(market, content, map, info) {
+function events_marker(marker, content, map, info) {
+	if (!(typeof marker === "undefined")){
+		 google.maps.event.addListener(marker, 'mouseover', (function(marker,content,info) {
+	        return function () {
+	            info.setContent(content);
+	            info.open(map,marker);
+	        }
+	    })(marker,content,info));
 
-    google.maps.event.addListener(market, 'mouseover', (function(market,content,info) {
-        return function () {
-            info.setContent(content);
-            info.open(map,market);
-        }
-    })(market,content,info));
+	    google.maps.event.addListener(marker, 'mouseout', (function(marker,content,info) {
+	        return function () {
+	            info.close(map,marker);
+	        }
+	    })(marker,content,info));
 
-    google.maps.event.addListener(market, 'mouseout', (function(market,content,info) {
-        return function () {
-            info.close(map,market);
-        }
-    })(market,content,info));
-
-		google.maps.event.addListener(market, 'click', (function(market,content,info) {
-				return function (market) {
-						for ( i = 0; i < hotelMarkers.length; i++) {
-
-					map	}
-
-						hotelSelected= true;
-						hotelSeleMarker= market;
-				}
-		})(market,content,info));
+	    marker.addListener('click', hotelOnClick);
+	}
 }
+
+function hotelOnClick(){
+	for ( i = 0; i < hotelMarkers.length; i++) {
+		if (!(typeof hotelMarkers[i] === "undefined")) {
+			hotelMarkers[i].setMap(null);
+		}
+	}
+	this.setMap(map);
+	hotelSelected = true;
+	hotelSeleMarker = this;
+}
+		/*
+		 function(marker,content,info) {
+				;
+				return function (marker) {
+
+						for ( i = 0; i < hotelMarkers.length; i++) {
+							if (!(typeof hotelMarkers[i]=== "undefined")) {
+								hotelMarkers[i].setMap(null);
+							}
+						}
+						marker.setMap(map);
+						hotelSelected= true;
+						hotelSeleMarker= marker;
+				}
+		})(marker,content,info));	
+		*/
+ 
 
 function getLatLngFromAddressURLRes( url, index, globalData, arrayMarkers, type){
 	$.get(url, ( response ) => {
